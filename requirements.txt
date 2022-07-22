@@ -1,1 +1,5 @@
+botocore
 requests==2.25.1
+selenium==4.3.0
+webdriver-manager==3.8.2
+boto3==1.24.35

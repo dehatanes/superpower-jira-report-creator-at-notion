@@ -1,4 +1,5 @@
 from report_creator.utils import get_formatted_date_for_today
+from .jira_adapter import get_jira_info, JiraInformationModel
 from .notion_adapter import (
     get_database_properties,
     get_template_content,
@@ -32,7 +33,6 @@ def get_properties_schema() -> dict:
 
 def create_page(properties: dict, page_children: list) -> str:
     resp = create_new_page_in_db(properties, page_children)
-    print(f'{resp}')
     return resp.get('id')
 
 
@@ -55,7 +55,23 @@ def get_prop_value(prop_name: str, prop: dict):
         return {"name": resp}
 
 
-def build_child_payload(prop_child_type: str, child_prop: dict) -> dict:
+def _is_jira_dashboard_space(child_prop: dict) -> bool:
+    return 'dashboard do jira aqui' in str(child_prop.get('paragraph', {}))
+
+
+def build_child_payload(prop_child_type: str, child_prop: dict, jira_info: JiraInformationModel) -> dict or None:
+    if _is_jira_dashboard_space(child_prop):
+        if jira_info.dashboard_image_url:
+            return {
+                "object": "block",
+                "type": "image",
+                "image": {
+                    "type": "external",
+                    "external": {
+                        "url": jira_info.dashboard_image_url
+                    }
+                },
+            }
     return {
         "object": "block",
         "type": prop_child_type,
@@ -64,14 +80,14 @@ def build_child_payload(prop_child_type: str, child_prop: dict) -> dict:
 
 
 def build_page_properties_and_content(properties_schema: dict, page_content: list) -> (dict, list):
+    jira_info = get_jira_info()
     properties = {
         prop['id']: {prop['type']: get_prop_value(name, prop)}
         for name, prop in properties_schema.items() if get_prop_value(name, prop)
     }
-    properties_children = []
-    for child in page_content:
-        if child['type'] != 'image':
-            properties_children.append(build_child_payload(child['type'], child))
+    properties_children = [
+        build_child_payload(child['type'], child, jira_info)
+        for child in page_content if child['type'] != 'image']  # Todo: fix to be able to create existing img blocks
     return properties, properties_children
 
 

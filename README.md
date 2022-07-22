@@ -13,7 +13,6 @@ criar um relatório de sprint no notion - no seu database de preferência ✨
 `todo`
 
 ## 2. Setup
-`todo`
 
 #### Instalando dependências 
 Uma vez que o projeto está instalado no seu computador, vá para a pasta dele no terminal
@@ -22,7 +21,7 @@ e instale as dependências do projeto usando o comando:
 pip3 install -r requirements.txt
 ``` 
 
-### Configurando variáveis de ambiente
+### Configurando variáveis de ambiente do Notion
 Para a `cli` funcionar, você precisa adicionar algumas variáveis de ambiente no seu terminal.
 Para isso rode os comandos a seguir alterando o que está depois de `=` por seus respectivos valores:
 - Troque `<your_notion_workspace_url>` pela url do seu workspace (tem a carinha https://www.notion.so/nome_aquii/)
@@ -36,6 +35,34 @@ export NOTION_API_KEY=<your_notion_api_key>
 export NOTION_DATABASE_ID=<your_notion_database_id>
 export NOTION_TEMPLATE_PAGE_ID=<your_notion_template_page_id>
 ```
+
+### Configurando variáveis de ambiente do Jira
+Ainda não acabou. No mesmo esquema das variáveis acima, você também vai precisar de algumas
+relacionadas ao Jira para que isso aqui possa funcionar.
+Rode os comandos a seguir alterando o que está depois de `=` por seus respectivos valores:
+- Troque `<your_jira_workspace_name>` pelo nome do seu workspace (você encontra ele na *url do seu jira* - é o nominho que fica entre o `https://` e `.atlassian.net`)
+- Troque `<your_jira_dashboard_id>` pelo id da sua dash do jira (é o último número na url da sua dashboard tipo `https://tokyodrift.atlassian.net/jira/dashboards/<AQUI>`)
+- O valor de `<your_jira_cloud_session_cookie>` é mais chatinho de encontrar. Você precisa:
+  - Estar logado no Jira através de um browser
+  - Pegar os cookies do seu browser
+  - Separar o valor do cookie chamado `cloud.session.token` e usá-lo aqui (é uma string grandinha mesmo)
+```bash
+export JIRA_WORKSPACE_NAME=<your_jira_workspace_name>
+export JIRA_DASHBOARD_ID=<your_jira_dashboard_id>
+export JIRA_CLOUD_SESSION_TOKEN=<your_jira_cloud_session_cookie>
+```
+
+### Configurando variáveis de ambiente da AWS
+Para conseguirmos salvar os screenshots do Jira e salvá-los no Notion, precisamos de um
+bucket da AWS que seja *publicamente acessível*.
+Então para isso:
+- Crie seu bucket e um usuário com acesso a ele (você pode usar [esse tutorial da aws para isso](https://docs.aws.amazon.com/pt_br/AmazonS3/latest/userguide/create-bucket-overview.html) 
+- Configure sua máquina com as infos do seu usuário para que as requisições para os serviços da aws consigam ser autenticadas,
+você pode usar [esse tutorial para isso](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
+- Com o nome do buscket que criou em mãos, configure essa variável de ambiente substituindo o valor de `<your_bucket_name>`:
+  ```bash
+  export BUCKET_NAME=<your_bucket_name>
+  ```
 
 ## 3. Como usar
 Para usar basta estar na pasta do projeto e rodar o comando:
