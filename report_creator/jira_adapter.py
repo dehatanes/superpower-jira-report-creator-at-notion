@@ -27,11 +27,15 @@ def _take_screenshots(jira_workspace_name: str, dashboard_id: str) -> str:
     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     browser.get(dashboard_url)
     browser.add_cookie({"name": "cloud.session.token", "value": JIRA_CLOUD_SESSION_TOKEN})
-    browser.set_window_size(1800, 1630)
     browser.get(dashboard_url)
-
     print('Esse trem é meio demorado...')
-    time.sleep(10)
+    time.sleep(30)
+    element=browser.find_element("xpath", '//div[@id="dashboard"]')
+    total_height = element.size["height"]+1000
+    browser.set_window_size(1800, total_height)
+
+    print('Calma que vai...')
+    time.sleep(30)
 
     browser.save_screenshot(temp_img_name)
     browser.quit()
