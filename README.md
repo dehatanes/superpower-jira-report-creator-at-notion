@@ -27,13 +27,17 @@ Para isso rode os comandos a seguir alterando o que está depois de `=` por seus
 - Troque `<your_notion_workspace_url>` pela url do seu workspace (tem a carinha https://www.notion.so/nome_aquii/)
 - Troque `<your_notion_api_key>` pelo token que você recebe ao [configurar uma nova integração no Notion](https://developers.notion.com/docs/getting-started).
 - Troque `<your_notion_database_id>` pelo id do "database de atas" que você deseja inserir a nova ata criada pela cli.
-- Troque `your_notion_template_page_id>` pelo id de uma página que tem o conteúdo que você quer usar de
-template e copiar para a nova página que criar.
+- Troque `your_notion_template_page_id>` pelo id de uma página que tem o conteúdo que você quer usar de template e copiar para a nova página que criar.
+- Troque `your_notion_project_id>` pelo id do projeto que desejar extrair o relatório de burndown.
+- Troque `your_notion_board_id>` pelo id do board que desejar extrair o relatório de burndown.
+
 ```bash
 export NOTION_BASE_URL=<your_notion_workspace_url>
 export NOTION_API_KEY=<your_notion_api_key>
 export NOTION_DATABASE_ID=<your_notion_database_id>
 export NOTION_TEMPLATE_PAGE_ID=<your_notion_template_page_id>
+export NOTION_PROJECT_ID=<your_notion_project_id>
+export NOTION_BOARD_ID=<your_notion_board_id>
 ```
 
 ### Configurando variáveis de ambiente do Jira
