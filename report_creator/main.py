@@ -1,3 +1,4 @@
+from typing import Tuple
 from report_creator.utils import get_formatted_date_for_today
 from .jira_adapter import get_jira_info, JiraInformationModel
 from .notion_adapter import (
@@ -14,7 +15,7 @@ def main():
     print("--------------------------------------------")
     print()
     print("Aguarde um instante... criando página...")
-
+    #todo: add some env vars to console input instead(?)
     properties_schema = get_properties_schema()
     template_content = get_template_content()
     new_page_properties, new_page_children = build_page_properties_and_content(properties_schema, template_content)
@@ -23,7 +24,7 @@ def main():
     print()
     print('--------------------------------------------')
     print('Página criada com sucesso!')
-    print(f'Você pode visitá-la aqui: {NOTION_BASE_URL}/{"".join(new_page_id.split("-"))}')
+    print(f'Você pode visitá-la aqui: {NOTION_BASE_URL}/{"".join(new_page_id.lstrip().split("-"))}')
 
 
 def get_properties_schema() -> dict:
@@ -58,6 +59,8 @@ def get_prop_value(prop_name: str, prop: dict):
 def _is_jira_dashboard_space(child_prop: dict) -> bool:
     return 'dashboard do jira aqui' in str(child_prop.get('paragraph', {}))
 
+def _is_jira_burndown_space(child_prop: dict) -> bool:
+    return 'burndown do jira aqui' in str(child_prop.get('paragraph', {}))
 
 def build_child_payload(prop_child_type: str, child_prop: dict, jira_info: JiraInformationModel) -> dict or None:
     if _is_jira_dashboard_space(child_prop):
@@ -72,6 +75,18 @@ def build_child_payload(prop_child_type: str, child_prop: dict, jira_info: JiraI
                     }
                 },
             }
+    if _is_jira_burndown_space(child_prop):
+        if jira_info.burndown_chart_image_url:
+            return {
+                "object": "block",
+                "type": "image",
+                "image": {
+                    "type": "external",
+                    "external": {
+                        "url": jira_info.burndown_chart_image_url
+                    }
+                },
+            }
     return {
         "object": "block",
         "type": prop_child_type,
@@ -79,7 +94,7 @@ def build_child_payload(prop_child_type: str, child_prop: dict, jira_info: JiraI
     }
 
 
-def build_page_properties_and_content(properties_schema: dict, page_content: list) -> (dict, list):
+def build_page_properties_and_content(properties_schema: dict, page_content: list) -> Tuple:
     jira_info = get_jira_info()
     properties = {
         prop['id']: {prop['type']: get_prop_value(name, prop)}
