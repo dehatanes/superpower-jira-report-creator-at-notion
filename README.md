@@ -41,7 +41,7 @@ Ainda não acabou. No mesmo esquema das variáveis acima, você também vai prec
 relacionadas ao Jira para que isso aqui possa funcionar.
 Rode os comandos a seguir alterando o que está depois de `=` por seus respectivos valores:
 - Troque `<your_jira_workspace_name>` pelo nome do seu workspace (você encontra ele na *url do seu jira* - é o nominho que fica entre o `https://` e `.atlassian.net`)
-- Troque `<your_jira_dashboard_id>` pelo id da sua dash do jira (é o último número na url da sua dashboard tipo `https://tokyodrift.atlassian.net/jira/dashboards/<AQUI>`)
+- Troque `<your_jira_dashboard_id>` pelo id da sua dash do jira (é o último número na url da sua dashboard tipo `https://{{your_jira_workspace_name}}.atlassian.net/jira/dashboards/<AQUI>`)
 - O valor de `<your_jira_cloud_session_cookie>` é mais chatinho de encontrar. Você precisa:
   - Estar logado no Jira através de um browser
   - Pegar os cookies do seu browser
